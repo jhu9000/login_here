@@ -1,0 +1,6 @@
+name: 'Login Here'
+description: 'Adds destination query to current path for login and logout links.'
+type: module
+core: 8.x
+package: 'User Interface'
+core_version_requirement: ^8 || ^9

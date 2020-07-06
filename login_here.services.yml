@@ -1,0 +1,7 @@
+services:
+  login_here.path_processor:
+    class: Drupal\login_here\LoginHerePathProcessor
+    tags:
+      - { name: path_processor_outbound, priority: -1000 }
+
+

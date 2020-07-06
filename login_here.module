@@ -1,0 +1,48 @@
+<?php
+/**
+ * Eric Davila for UCSF and UCSF School of Pharmacy.
+ */
+
+/**
+ * Implments hook_url_outbound_alter().
+ */
+function login_here_url_outbound_alter(&$path, &$options, $original_path) {
+  // If the login or logout path is generated, add the current
+  // page destination info to the query string -- only when there is
+  // a blank "?destination=" provided.
+  if ($original_path == "user/login" && isset($options['query']['destination']) && empty($options['query']['destination'])) {
+    $options['query']['destination'] = _login_here_request_path();
+  }
+  elseif ($original_path == "user/logout" && isset($options['query']['destination']) && empty($options['query']['destination'])) {
+    $options['query']['destination'] = _login_here_request_path();
+  }
+
+}
+
+/**
+ * A private helper function for finding out appropriate return paths.
+ *
+ * Includes support for "domain_by_path()".
+ */
+function _login_here_request_path() {
+
+  if (drupal_is_front_page()) {
+    $request_path = "";
+  }
+  else {
+    $request_path = request_path();
+  }
+  if (module_exists('domain_by_path')) {
+    global $_domain;
+    if (!empty($_domain['domain_by_path'])) {
+      $request_arr = explode('/', request_path());
+      if (!empty($request_arr) && $request_arr[0] == $_domain['domain_by_path']) {
+        unset($request_arr[0]);
+        if (!empty($request_arr)) {
+          $request_path = implode('/', $request_arr);
+        }
+      }
+    }
+  }
+  return $request_path;
+}
